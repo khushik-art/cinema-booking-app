@@ -1,7 +1,7 @@
 import React from "react";
 import Homepage from "./components/homepage/Homepage";
 import Login from "./components/login/Login";
-import Register from "./components/login/register";
+import Register from "./components/login/Register";
 import { Routes, Route, BrowserRouter } from "react-router-dom";
 import ProtectedRoute from "./components/auth/ProtectedRoute";
 import MovieDetails from "./components/pages/MovieDetails";
