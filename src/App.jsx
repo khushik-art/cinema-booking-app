@@ -12,6 +12,7 @@ import BookingSummary from "./components/pages/BookingSummary";
 import PaymentSuccess from "./components/pages/PaymentSuccess";
 import MyTicket from "./components/pages/MyTicket";
 import Tickets from "./components/homepage/Tickets";
+import NotFound from "./components/pages/NotFound";
 
 const App = () => {
   return (
@@ -34,6 +35,8 @@ const App = () => {
       <Route path="/success" element={<PaymentSuccess />} />
       <Route path="/my-ticket" element={<MyTicket />} />
       <Route path="/tickets" element={<Tickets />} />
+
+      <Route path="*" element={<NotFound />} />
     </Routes>
   );
 };
