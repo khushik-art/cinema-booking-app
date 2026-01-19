@@ -5,12 +5,39 @@ import Navbar from "../homepage/Navbar";
 
 const API = "/api";
 
+/* ---------------- HELPERS ---------------- */
+
+// handles both string + array layouts
 const safeParseLayout = (layout) => {
   try {
-    return JSON.parse(layout) || [];
+    if (Array.isArray(layout)) return layout;
+    if (typeof layout === "string") return JSON.parse(layout);
+    return [];
   } catch {
     return [];
   }
+};
+
+// ["C","E"] → ["C","D","E"]
+const expandRows = (rows = []) => {
+  if (rows.length !== 2) return rows;
+
+  const start = rows[0].charCodeAt(0);
+  const end = rows[1].charCodeAt(0);
+
+  const result = [];
+  for (let i = start; i <= end; i++) {
+    result.push(String.fromCharCode(i));
+  }
+  return result;
+};
+
+// builds price lookup map
+const buildPriceMap = (priceArr = []) => {
+  return priceArr.reduce((acc, p) => {
+    acc[p.layoutType] = p.price;
+    return acc;
+  }, {});
 };
 
 const getRowWeight = (rows = []) =>
@@ -43,6 +70,7 @@ const SelectSeats = () => {
     const fetchShowtime = async () => {
       try {
         const token = localStorage.getItem("token");
+
         const res = await Axios.get(`${API}/show-times/${showtimeId}`, {
           headers: { Authorization: `Bearer ${token}` },
         });
@@ -51,20 +79,19 @@ const SelectSeats = () => {
         if (!data?.screen) throw new Error("Invalid showtime");
 
         const layout = safeParseLayout(data.screen.layout);
+        const priceMap = buildPriceMap(data.price || []);
 
         const seatSections = layout.map((section) => {
-          const priceObj = data.price.find(
-            (p) => p.layoutType === section.type
-          );
+          const [startCol, endCol] = section.layout.columns;
 
-          const [start, end] = section.layout.columns;
+          const price = priceMap[section.type] ?? 0;
 
           return {
             type: section.type,
-            price: priceObj?.price ?? 0,
-            label: `₹${priceObj?.price ?? 0} ${section.type}`,
-            rows: section.layout.rows,
-            seatsPerRow: end - start + 1,
+            price,
+            label: `₹${price} ${section.type}`,
+            rows: expandRows(section.layout.rows),
+            seatsPerRow: endCol - startCol + 1,
           };
         });
 
@@ -72,11 +99,11 @@ const SelectSeats = () => {
           o.seatData.seats.map((s) => `${s.row}${s.column}`)
         );
 
-        const sortedSections = [...seatSections].sort(
+        const sorted = [...seatSections].sort(
           (a, b) => getRowWeight(b.rows) - getRowWeight(a.rows)
         );
 
-        setSections(sortedSections);
+        setSections(sorted);
         setBlockedSeats(blocked);
       } catch (err) {
         console.error(err);
@@ -91,18 +118,16 @@ const SelectSeats = () => {
 
   /* ---------------- SEAT TOGGLE ---------------- */
   const toggleSeat = (id, price, layoutType) => {
-  if (blockedSeats.includes(id)) return;
-  if (!layoutType) return; // ⛔ hard guard
+    if (blockedSeats.includes(id)) return;
 
-  setSelectedSeats((prev) =>
-    prev.find((s) => s.id === id)
-      ? prev.filter((s) => s.id !== id)
-      : prev.length < seatCount
-      ? [...prev, { id, price, layoutType }]
-      : prev
-  );
-};
-
+    setSelectedSeats((prev) =>
+      prev.find((s) => s.id === id)
+        ? prev.filter((s) => s.id !== id)
+        : prev.length < seatCount
+        ? [...prev, { id, price, layoutType }]
+        : prev
+    );
+  };
 
   /* ---------------- TOTAL PRICE ---------------- */
   const totalPrice = useMemo(
@@ -115,7 +140,7 @@ const SelectSeats = () => {
     return (
       <>
         <Navbar />
-        <p className="mt-20 text-center text-gray-500">Loading seats...</p>
+        <p className="mt-20 text-center text-gray-500">Loading seats…</p>
       </>
     );
   }
@@ -158,7 +183,6 @@ const SelectSeats = () => {
           {sections.map((sec) => (
             <div key={sec.type} className="mb-14">
               <p className="text-sm text-gray-500 mb-3">{sec.label}</p>
-
               <div className="w-full h-px bg-gray-200 mb-6" />
 
               {sec.rows.map((row) => (
@@ -172,7 +196,9 @@ const SelectSeats = () => {
                       <button
                         key={id}
                         disabled={blocked}
-                        onClick={() => toggleSeat(id, sec.price, sec.type)}
+                        onClick={() =>
+                          toggleSeat(id, sec.price, sec.type)
+                        }
                         className={`w-10 h-8 rounded-md border text-xs transition
                           ${
                             blocked
@@ -191,7 +217,7 @@ const SelectSeats = () => {
             </div>
           ))}
 
-          {/* SCREEN INDICATOR */}
+          {/* SCREEN */}
           <div className="mt-16 flex flex-col items-center">
             <div className="w-[65%] h-2 bg-gray-300 rounded-full" />
             <p className="text-xs text-gray-500 mt-2">
@@ -199,34 +225,31 @@ const SelectSeats = () => {
             </p>
           </div>
 
-          {/* PAY BUTTON */}
+          {/* PAY */}
           <div className="mt-12 flex justify-center">
-            {/* PAY BUTTON */}
-            <div className="mt-12 flex justify-center">
-              <button
-                onClick={() =>
-                  navigate("/booking-summary", {
-                    state: {
-                      movieTitle,
-                      date,
-                      time,
-                      showtimeId,
-                      seats: selectedSeats, // [{ id, price }]
-                      totalPrice,
-                    },
-                  })
-                }
-                disabled={selectedSeats.length !== seatCount}
-                className={`px-12 py-3 rounded-lg font-medium transition
-    ${
-      selectedSeats.length === seatCount
-        ? "border border-sky-600 text-sky-600 hover:bg-sky-600 hover:text-white"
-        : "bg-gray-200 text-gray-400 cursor-not-allowed"
-    }`}
-              >
-                Pay ₹{totalPrice}
-              </button>
-            </div>
+            <button
+              onClick={() =>
+                navigate("/booking-summary", {
+                  state: {
+                    movieTitle,
+                    date,
+                    time,
+                    showtimeId,
+                    seats: selectedSeats,
+                    totalPrice,
+                  },
+                })
+              }
+              disabled={selectedSeats.length !== seatCount}
+              className={`px-12 py-3 rounded-lg font-medium transition
+                ${
+                  selectedSeats.length === seatCount
+                    ? "border border-sky-600 text-sky-600 hover:bg-sky-600 hover:text-white"
+                    : "bg-gray-200 text-gray-400 cursor-not-allowed"
+                }`}
+            >
+              Pay ₹{totalPrice}
+            </button>
           </div>
         </div>
       </div>
