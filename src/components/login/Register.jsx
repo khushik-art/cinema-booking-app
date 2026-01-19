@@ -27,7 +27,7 @@ const Register = () => {
 
     try {
       await Axios.post(
-        "http://ec2-13-201-98-117.ap-south-1.compute.amazonaws.com:3000/auth/signup",
+        "/api/auth/signup",
         {
           firstName,
           lastName,

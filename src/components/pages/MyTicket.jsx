@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import Navbar from "../homepage/Navbar";
 
 const BASE_URL =
-  "http://ec2-13-201-98-117.ap-south-1.compute.amazonaws.com:3000";
+  "/api";
 
 const formatTime = (iso) =>
   new Date(iso).toLocaleTimeString("en-IN", {

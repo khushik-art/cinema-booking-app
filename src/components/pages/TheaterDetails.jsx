@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import Axios from "axios";
 import SeatCountModal from "./SeatCountModal";
 
-const API = "http://ec2-13-201-98-117.ap-south-1.compute.amazonaws.com:3000";
+const API = "/api";
 
 const TheaterDetails = () => {
   const { theaterId } = useParams();
