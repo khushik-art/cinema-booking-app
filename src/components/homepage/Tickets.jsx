@@ -19,7 +19,7 @@ const downloadTicketPdf = (order) => {
 
   // ===== PDF CONTENT =====
   doc.setFontSize(20);
-  doc.text("🎬 Cinema Ticket", 20, 20);
+  doc.text("Cinema Ticket", 20, 20);
 
   doc.setFontSize(12);
   doc.text(`Movie Title: ${movieTitle}`, 20, 45);
