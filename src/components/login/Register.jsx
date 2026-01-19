@@ -26,21 +26,11 @@ const Register = () => {
     setLoading(true);
 
     try {
-      await Axios.post(
-        "/api/auth/signup",
-        {
-          firstName,
-          lastName,
-          email,
-          password,
-        },
-        {
-          headers: {
-            "Content-Type": "application/json",
-            accept: "*/*",
-          },
-        }
-      );
+      await Axios.post("/api/auth/signup", {
+        name: `${firstName} ${lastName}`,
+        email,
+        password,
+      });
 
       // ✅ After successful signup → go to login page
       navigate("/");
