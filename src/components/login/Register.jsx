@@ -27,8 +27,9 @@ const Register = () => {
 
     try {
       await Axios.post("/api/auth/signup", {
-        name: `${firstName} ${lastName}`,
-        email,
+        firstName: firstName.trim(),
+        lastName: lastName.trim(),
+        email: email.trim(),
         password,
       });
 
