@@ -72,7 +72,7 @@ const SelectSeats = () => {
       try {
         const token = localStorage.getItem("token");
 
-        const res = await api.get(`${API}/show-times/${showtimeId}`, {
+        const res = await api.get(`/show-times/${showtimeId}`, {
           headers: { Authorization: `Bearer ${token}` },
         });
 

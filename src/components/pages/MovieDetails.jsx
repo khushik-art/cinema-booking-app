@@ -34,7 +34,7 @@ const MovieDetails = () => {
     const fetchMovie = async () => {
       try {
         const token = localStorage.getItem("token");
-        const res = await api.get(`${API}/movies/${movieId}`, {
+        const res = await api.get(`/movies/${movieId}`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         setMovie(res.data);
@@ -58,7 +58,7 @@ const MovieDetails = () => {
 
       try {
         const res = await api.get(
-          `${API}/theaters/${selectedTheater.id}/shows`,
+          `/theaters/${selectedTheater.id}/shows`,
           {
             params: { date: selectedDate },
             headers: { Authorization: `Bearer ${token}` },

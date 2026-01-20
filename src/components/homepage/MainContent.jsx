@@ -15,7 +15,7 @@ const MainContent = () => {
       const token = localStorage.getItem("token");
 
       const response = await api.get(
-        "/api/movies",
+        "/movies",
         {
           headers: {
             Authorization: `Bearer ${token}`,

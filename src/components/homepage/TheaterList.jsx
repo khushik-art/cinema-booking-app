@@ -38,7 +38,7 @@ const TheaterList = () => {
       const token = localStorage.getItem("token");
 
       const response = await api.get(
-        "/api/theaters",
+        "/theaters",
         {
           headers: {
             Authorization: `Bearer ${token}`,

@@ -27,7 +27,7 @@ const Register = () => {
     setLoading(true);
 
     try {
-      await api.post("/api/auth/signup", {
+      await api.post("/auth/signup", {
         firstName: firstName.trim(),
         lastName: lastName.trim(),
         email: email.trim(),
