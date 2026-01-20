@@ -24,19 +24,19 @@ const App = () => {
         element={
           <ProtectedRoute>
             <Homepage />
+            <Route path="/movie/:movieId" element={<MovieDetails />} />
+            <Route path="/theaters" element={<TheaterList />} />
+            <Route path="/theaters/:theaterId" element={<TheaterDetails />} />
+            <Route path="/select-seats/:showtimeId" element={<SelectSeats />} />
+            <Route path="/booking-summary" element={<BookingSummary />} />
+            <Route path="/success" element={<PaymentSuccess />} />
+            <Route path="/my-ticket" element={<MyTicket />} />
+            <Route path="/tickets" element={<Tickets />} />
+
+            <Route path="*" element={<NotFound />} />
           </ProtectedRoute>
         }
       />
-      <Route path="/movie/:movieId" element={<MovieDetails />} />
-      <Route path="/theaters" element={<TheaterList />} />
-      <Route path="/theaters/:theaterId" element={<TheaterDetails />} />
-      <Route path="/select-seats/:showtimeId" element={<SelectSeats />} />
-      <Route path="/booking-summary" element={<BookingSummary />} />
-      <Route path="/success" element={<PaymentSuccess />} />
-      <Route path="/my-ticket" element={<MyTicket />} />
-      <Route path="/tickets" element={<Tickets />} />
-
-      <Route path="*" element={<NotFound />} />
     </Routes>
   );
 };
