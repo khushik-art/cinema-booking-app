@@ -2,6 +2,7 @@ import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { useEffect, useState, useMemo } from "react";
 import Axios from "axios";
 import Navbar from "../homepage/Navbar";
+import api from "../../api";
 
 const API = "/api";
 
@@ -71,7 +72,7 @@ const SelectSeats = () => {
       try {
         const token = localStorage.getItem("token");
 
-        const res = await Axios.get(`${API}/show-times/${showtimeId}`, {
+        const res = await api.get(`${API}/show-times/${showtimeId}`, {
           headers: { Authorization: `Bearer ${token}` },
         });
 

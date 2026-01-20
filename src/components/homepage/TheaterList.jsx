@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Axios from "axios";
 import { useNavigate } from "react-router-dom";
+import api from "../../api";
 
 // const theaters = [
 //   {
@@ -36,7 +37,7 @@ const TheaterList = () => {
 
       const token = localStorage.getItem("token");
 
-      const response = await Axios.get(
+      const response = await api.get(
         "/api/theaters",
         {
           headers: {

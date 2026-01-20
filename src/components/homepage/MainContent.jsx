@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import Axios from "axios";
 import MovieCard from "./MovieCard";
 import TheaterList from "./TheaterList";
+import api from "../../api";
 
 const MainContent = () => {
   const [activeTab, setActiveTab] = useState("movie");
@@ -13,7 +14,7 @@ const MainContent = () => {
       setLoading(true);
       const token = localStorage.getItem("token");
 
-      const response = await Axios.get(
+      const response = await api.get(
         "/api/movies",
         {
           headers: {

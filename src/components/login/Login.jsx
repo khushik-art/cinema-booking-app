@@ -3,6 +3,7 @@ import Register from "./Register";
 import Logo from "../../assets/logo.png";
 import { useNavigate } from "react-router-dom";
 import Axios from "axios";
+import api from "../../api";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -16,7 +17,7 @@ const Login = () => {
     setError("");
 
     try {
-      const res = await Axios.post(
+      const res = await api.post(
         "/api/auth/login",
         {
           email,

@@ -3,6 +3,7 @@ import Navbar from "../homepage/Navbar";
 import { useEffect, useState } from "react";
 import Axios from "axios";
 import SeatCountModal from "./SeatCountModal";
+import api from "../../api";
 
 const API = "/api";
 
@@ -46,7 +47,7 @@ const TheaterDetails = () => {
     const fetchTheater = async () => {
       try {
         const token = localStorage.getItem("token");
-        const res = await Axios.get(`${API}/theaters/${theaterId}`, {
+        const res = await api.get(`${API}/theaters/${theaterId}`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         setTheater(res.data.data);
@@ -68,7 +69,7 @@ const TheaterDetails = () => {
       setLoadingMovies(true);
       try {
         const token = localStorage.getItem("token");
-        const res = await Axios.get(`${API}/theaters/${theaterId}/shows`, {
+        const res = await api.get(`${API}/theaters/${theaterId}/shows`, {
           params: { date: selectedDate },
           headers: { Authorization: `Bearer ${token}` },
         });

@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import Logo from "../../assets/logo.png";
 import { useNavigate } from "react-router-dom";
 import Axios from "axios";
+import api from "../../api";
 
 const Register = () => {
   const navigate = useNavigate();
@@ -26,7 +27,7 @@ const Register = () => {
     setLoading(true);
 
     try {
-      await Axios.post("/api/auth/signup", {
+      await api.post("/api/auth/signup", {
         firstName: firstName.trim(),
         lastName: lastName.trim(),
         email: email.trim(),
